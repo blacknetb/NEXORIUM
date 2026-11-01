@@ -1,0 +1,61 @@
+name: Bug Report
+description: Reportar un error o comportamiento inesperado.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tomarte el tiempo para reportar este problema.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: ¿Qué sucedió?
+      description: Describe el comportamiento observado y lo que esperabas que sucediera.
+      placeholder: "Un error ocurrió cuando..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Pasos para reproducir
+      description: Proporciona los pasos detallados para reproducir el problema.
+      placeholder: |
+        1. Ve a '...'
+        2. Haz clic en '...'
+        3. Desplázate hasta '...'
+        4. Observa el error
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión del software
+      description: ¿Qué versión del proyecto estás utilizando?
+      placeholder: "ej. 1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Navegadores afectados
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Otro
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs relevantes
+      description: Copia y pega cualquier salida de log relevante.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Código de Conducta
+      options:
+        - label: Acepto seguir el Código de Conducta de este proyecto.
+          required: true

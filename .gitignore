@@ -1,0 +1,71 @@
+# Dependencias
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+
+# Build
+dist/
+build/
+out/
+.next/
+coverage/
+*.tsbuildinfo
+.turbo/
+
+# Entornos
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+test-results/
+playwright-report/
+blob-report/
+.nyc_output/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/captures/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+
+# Python (si aplica)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# MySQL / Docker volumes
+mysql-data/
+redis-data/
+
+# Misc
+.cache/
+tmp/

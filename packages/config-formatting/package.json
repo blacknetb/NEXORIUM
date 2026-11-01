@@ -1,0 +1,29 @@
+{
+  "name": "@esm/config-formatting",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Configuración compartida de Prettier para ESM.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./prettier.config.js",
+  "exports": {
+    ".": "./prettier.config.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["prettier.config.js"],
+  "scripts": {
+    "clean": "rimraf .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "prettier": "^3.4.2"
+  },
+  "peerDependencies": {
+    "prettier": "^3.4.2"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.10"
+  },
+  "engines": {
+    "node": ">=20.11.1"
+  }
+}

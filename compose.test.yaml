@@ -1,0 +1,53 @@
+name: esm-test
+
+services:
+  mysql-test:
+    image: mysql:8.0
+    container_name: esm-mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: root-crfenix55
+      MYSQL_DATABASE: esm_db_test
+      MYSQL_USER: ADMIN
+      MYSQL_PASSWORD: J-admin-crfenix55
+    ports:
+      - "3307:3306"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot-crfenix55"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - esm-test-net
+
+  redis-test:
+    image: redis:7-alpine
+    container_name: esm-redis-test
+    tmpfs:
+      - /data
+    networks:
+      - esm-test-net
+
+  backend-test:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+      target: test
+    container_name: esm-backend-test
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: mysql://ADMIN:J-admin-crfenix55@mysql-test:3306/esm_db_test
+      REDIS_URL: redis://redis-test:6379
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_started
+    command: ["npm", "run", "test"]
+    networks:
+      - esm-test-net
+
+networks:
+  esm-test-net:
+    driver: bridge

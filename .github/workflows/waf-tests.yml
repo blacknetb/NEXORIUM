@@ -1,0 +1,52 @@
+name: WAF & Security Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'URL objetivo a escanear (ej. https://staging.tu-dominio.com)'
+        required: true
+        default: 'http://localhost:3000'
+  schedule:
+    # Ejecución semanal los lunes a las 3:00 UTC
+    - cron: '0 3 * * 1'
+
+jobs:
+  zap-baseline-scan:
+    name: OWASP ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      issues: write
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Ejecutar OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          # Target: usa el input del workflow o la URL por defecto
+          target: ${{ github.event.inputs.target_url || 'http://localhost:3000' }}
+          # Reglas personalizadas para ignorar falsos positivos conocidos
+          rules_file_name: '.zap/rules.tsv'
+          # Opciones de comando: -I para no fallar en warnings, -j para usar el spider en modo AJAX
+          cmd_options: '-I -j'
+          # Generar reporte HTML y SARIF
+          allow_issue_writing: false
+
+      - name: Subir reporte HTML como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-scan-report
+          path: report_html.html
+          retention-days: 30
+
+      - name: Subir resultados SARIF a GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: report_json.json
+          category: zap-baseline

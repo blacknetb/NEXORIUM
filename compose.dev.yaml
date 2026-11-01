@@ -1,0 +1,101 @@
+name: esm-dev
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: esm-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Admin-Crfenix123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-esm_db}
+      MYSQL_USER: ${MYSQL_USER:-ADMIN}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-J-admin-crfenix55}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-dev-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Admin-Crfenix123}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - esm-dev-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: esm-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-dev-data:/data
+    networks:
+      - esm-dev-net
+
+  adminer:
+    image: adminer:latest
+    container_name: esm-adminer-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - esm-dev-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+      target: development
+    container_name: esm-backend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mysql://${MYSQL_USER:-ADMIN}:${MYSQL_PASSWORD:-J-admin-crfenix55}@mysql:3306/${MYSQL_DATABASE:-esm_db}
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - /app/apps/backend/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - esm-dev-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      target: development
+    container_name: esm-frontend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:4000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - /app/apps/frontend/node_modules
+    depends_on:
+      - backend
+    networks:
+      - esm-dev-net
+
+volumes:
+  mysql-dev-data:
+  redis-dev-data:
+
+networks:
+  esm-dev-net:
+    driver: bridge

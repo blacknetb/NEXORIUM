@@ -1,0 +1,72 @@
+name: esm-prod
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: esm-mysql-prod
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-prod-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks:
+      - esm-prod-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: esm-redis-prod
+    restart: always
+    volumes:
+      - redis-prod-data:/data
+    networks:
+      - esm-prod-net
+
+  backend:
+    image: ghcr.io/org/esm-backend:latest
+    container_name: esm-backend-prod
+    restart: always
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+    ports:
+      - "4000:4000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - esm-prod-net
+
+  frontend:
+    image: ghcr.io/org/esm-frontend:latest
+    container_name: esm-frontend-prod
+    restart: always
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - esm-prod-net
+
+volumes:
+  mysql-prod-data:
+  redis-prod-data:
+
+networks:
+  esm-prod-net:
+    driver: bridge

@@ -1,0 +1,27 @@
+# CODEOWNERS
+
+*                                   @org/maintainers
+
+/.github/                           @org/maintainers @org/devops
+/.github/workflows/                 @org/devops
+
+/compose*.yaml                      @org/devops
+/.dockerignore                      @org/devops
+/Dockerfile*                        @org/devops
+
+/apps/backend/                      @org/backend-team
+
+/apps/frontend/                     @org/frontend-team
+
+/apps/android/                      @org/mobile-team
+
+/packages/                          @org/maintainers
+
+/package.json                       @org/maintainers
+/tsconfig.base.json                 @org/maintainers
+/turbo.json                         @org/maintainers
+/eslint.config.js                   @org/maintainers
+/.prettierrc.json                   @org/maintainers
+
+/*.md                               @org/docs
+/docs/                              @org/docs

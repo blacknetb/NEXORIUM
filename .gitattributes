@@ -1,0 +1,42 @@
+# Normalización de fin de línea
+* text=auto eol=lf
+
+# Código fuente
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.md   text eol=lf
+
+# Binarios
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.svg  text
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+
+# Scripts
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Lockfiles
+package-lock.json linguist-generated=true
+pnpm-lock.yaml    linguist-generated=true
+yarn.lock         linguist-generated=true
+
+# Android
+*.apk   binary
+*.aab   binary
+*.jar   binary
+gradlew text eol=lf

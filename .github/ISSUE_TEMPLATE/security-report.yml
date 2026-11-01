@@ -1,0 +1,38 @@
+name: Security Report
+description: Reportar una vulnerabilidad de seguridad de forma privada.
+title: "[Security]: "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **IMPORTANTE**: No reportes vulnerabilidades de seguridad en issues públicos.
+        Por favor, envía un correo a security@example.com o utiliza el reporte privado de GitHub.
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción de la vulnerabilidad
+      description: Proporciona una descripción clara y concisa del problema de seguridad.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Describe los pasos para reproducir la vulnerabilidad.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto potencial
+      description: Explica el impacto potencial de esta vulnerabilidad.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión afectada
+      description: ¿Qué versiones del software están afectadas?
+    validations:
+      required: true

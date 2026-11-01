@@ -1,0 +1,30 @@
+{
+  "name": "@esm/config-typescript",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Configuraciones base de TypeScript compartidas por todos los workspaces de ESM.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["base.json", "node.json", "react.json", "nextjs.json", "library.json"],
+  "exports": {
+    "./base.json": "./base.json",
+    "./node.json": "./node.json",
+    "./react.json": "./react.json",
+    "./nextjs.json": "./nextjs.json",
+    "./library.json": "./library.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf .turbo *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.10",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.11.1"
+  }
+}

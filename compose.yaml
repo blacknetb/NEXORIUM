@@ -1,0 +1,50 @@
+# Compose base — punto de entrada común para todos los entornos
+# Uso:
+#   docker compose -f compose.yaml -f compose.dev.yaml  up -d
+#   docker compose -f compose.yaml -f compose.test.yaml run --rm backend-test
+#   docker compose -f compose.yaml -f compose.prod.yaml up -d
+
+name: esm
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - esm-net
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - esm-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - esm-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - esm-net
+
+networks:
+  esm-net:
+    driver: bridge
